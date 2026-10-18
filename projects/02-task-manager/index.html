@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📝 Task Manager</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+
+    <div class="add-task">
+      <input type="text" id="taskInput" placeholder="Task title..." class="input">
+      <input type="date" id="taskDate" class="input">
+      <select id="taskPriority" class="input">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+      </select>
+      <button id="addBtn" class="btn btn-primary">Add Task</button>
+    </div>
+
+    <div class="controls">
+      <input type="text" id="searchInput" placeholder="Search tasks..." class="input">
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="active">Active</button>
+        <button class="filter-btn" data-filter="completed">Completed</button>
+      </div>
+      <select id="sortSelect" class="input">
+        <option value="date">Sort by Date</option>
+        <option value="priority">Sort by Priority</option>
+        <option value="title">Sort by Title</option>
+      </select>
+    </div>
+
+    <div id="tasksList" class="tasks-list"></div>
+
+    <div class="stats">
+      <span>Total: <strong id="totalTasks">0</strong></span>
+      <span>Active: <strong id="activeTasks">0</strong></span>
+      <span>Completed: <strong id="completedTasks">0</strong></span>
+      <button id="clearCompleted" class="btn btn-secondary">Clear Completed</button>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h2>Edit Task</h2>
+      <input type="text" id="editTitle" class="input">
+      <input type="date" id="editDate" class="input">
+      <select id="editPriority" class="input">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <div class="modal-actions">
+        <button id="saveEdit" class="btn btn-primary">Save</button>
+        <button id="cancelEdit" class="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Mini Projects - 15+ Production-Quality Projects</title>
+  <link rel="stylesheet" href="assets/css/shared.css">
+  <style>
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    .header h1 {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-secondary);
+      color: var(--text);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .filter-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0 4rem;
+    }
+
+    .project-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    .project-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .project-number {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-title {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-description {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .project-body {
+      padding: 1.5rem;
+      flex: 1;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .project-features {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-features li {
+      padding: 0.5rem 0;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .project-features li::before {
+      content: "✓";
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    .project-footer {
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .project-link {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+
+    .project-link:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--shadow);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      z-index: 1000;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-secondary);
+    }
+
+    .footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.8rem;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-box {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="container">
+      <h1>Web Mini Projects</h1>
+      <p>15+ Production-Quality HTML, CSS & JavaScript Projects</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="controls">
+      <input type="text" id="searchInput" class="input search-box" placeholder="Search projects...">
+      <div class="filter-group">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="productivity">Productivity</button>
+        <button class="filter-btn" data-category="utility">Utility</button>
+        <button class="filter-btn" data-category="interactive">Interactive</button>
+        <button class="filter-btn" data-category="api">API</button>
+      </div>
+    </div>
+
+    <div class="projects-grid" id="projectsGrid"></div>
+  </div>
+
+  <div class="footer">
+    <div class="container">
+      <p>&copy; 2026 Web Mini Projects. Built with HTML, CSS & Vanilla JavaScript.</p>
+    </div>
+  </div>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+
+  <script>
+    const projects = [
+      {
+        number: "01",
+        title: "Interactive Portfolio",
+        description: "Modern developer portfolio with hero section, project showcase, skills, experience timeline, and theme toggle.",
+        category: "interactive",
+        tags: ["Portfolio", "Responsive", "Theme Toggle"],
+        features: ["Hero section", "Project showcase", "Skills & experience", "Responsive design"],
+        path: "projects/01-portfolio/"
+      },
+      {
+        number: "02",
+        title: "Task Manager",
+        description: "Complete task management with creation, editing, deletion, priorities, due dates, and local persistence.",
+        category: "productivity",
+        tags: ["Tasks", "LocalStorage", "CRUD"],
+        features: ["Task CRUD", "Priorities & due dates", "Search & filter", "Local storage"],
+        path: "projects/02-task-manager/"
+      },
+      {
+        number: "03",
+        title: "Expense Tracker",
+        description: "Track income/expenses with categories, transaction history, balance summaries, and data export/import.",
+        category: "productivity",
+        tags: ["Finance", "Charts", "Export"],
+        features: ["Income/expense tracking", "Categories", "Visual charts", "JSON export/import"],
+        path: "projects/03-expense-tracker/"
+      },
+      {
+        number: "04",
+        title: "Weather Dashboard",
+        description: "Weather dashboard using Open-Meteo API with location search, current conditions, and forecasts.",
+        category: "api",
+        tags: ["API", "Weather", "Real-time"],
+        features: ["Location search", "Current weather", "5-day forecast", "Error handling"],
+        path: "projects/04-weather-dashboard/"
+      },
+      {
+        number: "05",
+        title: "Quiz Application",
+        description: "Quiz engine with multiple-choice questions, progress indicators, scoring, timer, and answer review.",
+        category: "interactive",
+        tags: ["Quiz", "Timer", "Scoring"],
+        features: ["Multiple choice", "Progress tracking", "Timer & scoring", "Answer review"],
+        path: "projects/05-quiz-app/"
+      },
+      {
+        number: "06",
+        title: "Markdown Editor",
+        description: "Live Markdown editor with preview, formatting shortcuts, and export functionality.",
+        category: "utility",
+        tags: ["Markdown", "Editor", "Live Preview"],
+        features: ["Live preview", "Formatting toolbar", "Safe rendering", "Download export"],
+        path: "projects/06-markdown-editor/"
+      },
+      {
+        number: "07",
+        title: "Password Generator",
+        description: "Secure password generator using crypto API with customizable options and strength indicator.",
+        category: "utility",
+        tags: ["Security", "Crypto", "Generator"],
+        features: ["Crypto-secure", "Customizable length", "Strength meter", "Copy to clipboard"],
+        path: "projects/07-password-generator/"
+      },
+      {
+        number: "08",
+        title: "Pomodoro Timer",
+        description: "Productivity timer with work/break sessions, notifications, and configurable durations.",
+        category: "productivity",
+        tags: ["Timer", "Productivity", "Notifications"],
+        features: ["Work/break cycles", "Notifications", "Configurable", "Session tracking"],
+        path: "projects/08-pomodoro-timer/"
+      },
+      {
+        number: "09",
+        title: "Notes Application",
+        description: "Full-featured notes app with creation, editing, search, pinning, and local persistence.",
+        category: "productivity",
+        tags: ["Notes", "CRUD", "Search"],
+        features: ["Note CRUD", "Search & filter", "Pin important", "Export/import"],
+        path: "projects/09-notes-app/"
+      },
+      {
+        number: "10",
+        title: "Image Gallery",
+        description: "Responsive image gallery with local selection, filters, search, and lightbox modal.",
+        category: "interactive",
+        tags: ["Gallery", "Images", "Lightbox"],
+        features: ["Local file upload", "Category filters", "Lightbox viewer", "Responsive grid"],
+        path: "projects/10-image-gallery/"
+      },
+      {
+        number: "11",
+        title: "Calculator Suite",
+        description: "Functional calculator with keyboard support, decimal handling, and unit conversion.",
+        category: "utility",
+        tags: ["Calculator", "Math", "Keyboard"],
+        features: ["Standard calculator", "Keyboard support", "Error handling", "Unit converter"],
+        path: "projects/11-calculator/"
+      },
+      {
+        number: "12",
+        title: "Typing Speed Test",
+        description: "Typing test measuring WPM, accuracy, errors with multiple text samples and detailed results.",
+        category: "interactive",
+        tags: ["Typing", "WPM", "Test"],
+        features: ["WPM & accuracy", "Error tracking", "Multiple samples", "Results summary"],
+        path: "projects/12-typing-test/"
+      },
+      {
+        number: "13",
+        title: "GitHub Profile Explorer",
+        description: "GitHub user search with profile details, repositories, followers using public API.",
+        category: "api",
+        tags: ["GitHub", "API", "Search"],
+        features: ["User search", "Profile display", "Repositories list", "Rate limit handling"],
+        path: "projects/13-github-explorer/"
+      },
+      {
+        number: "14",
+        title: "Kanban Board",
+        description: "Drag-and-drop task board with columns, task management, priorities, and accessibility.",
+        category: "productivity",
+        tags: ["Kanban", "Drag-Drop", "Tasks"],
+        features: ["Drag & drop", "Task columns", "Keyboard controls", "Local storage"],
+        path: "projects/14-kanban-board/"
+      },
+      {
+        number: "15",
+        title: "JSON Formatter",
+        description: "JSON validation, formatting, minification with syntax highlighting and error feedback.",
+        category: "utility",
+        tags: ["JSON", "Formatter", "Validator"],
+        features: ["Syntax validation", "Format & minify", "Error messages", "Copy to clipboard"],
+        path: "projects/15-json-formatter/"
+      }
+    ];
+
+    const projectsGrid = document.getElementById('projectsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const themeToggle = document.getElementById('themeToggle');
+
+    let currentFilter = 'all';
+
+    function renderProjects(filter = 'all', search = '') {
+      const filtered = projects.filter(p => {
+        const matchesCategory = filter === 'all' || p.category === filter;
+        const matchesSearch = search === '' || 
+          p.title.toLowerCase().includes(search.toLowerCase()) ||
+          p.description.toLowerCase().includes(search.toLowerCase()) ||
+          p.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        projectsGrid.innerHTML = `
+          <div class="empty-state">
+            <h3>No projects found</h3>
+            <p>Try adjusting your search or filter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      projectsGrid.innerHTML = filtered.map(p => `
+        <div class="project-card">
+          <div class="project-header">
+            <span class="project-number">Project ${p.number}</span>
+            <h3 class="project-title">${p.title}</h3>
+            <p class="project-description">${p.description}</p>
+          </div>
+          <div class="project-body">
+            <div class="project-tags">
+              ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+            </div>
+            <ul class="project-features">
+              ${p.features.map(f => `<li>${f}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="project-footer">
+            <a href="${p.path}" class="project-link">Launch Project</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    searchInput.addEventListener('input', (e) => {
+      renderProjects(currentFilter, e.target.value);
+    });
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.category;
+        renderProjects(currentFilter, searchInput.value);
+      });
+    });
+
+    // Theme toggle
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    });
+
+    renderProjects();
+  </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Speed Test</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg: #ffffff;
+      --bg-secondary: #f9fafb;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+    }
+    [data-theme="dark"] {
+      --bg: #111827;
+      --bg-secondary: #1f2937;
+      --text: #f9fafb;
+      --text-secondary: #9ca3af;
+      --border: #374151;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    .text-display {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.3rem;
+      line-height: 2;
+      min-height: 150px;
+      user-select: none;
+    }
+    .char {
+      position: relative;
+    }
+    .char.correct { color: var(--success); }
+    .char.incorrect {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+    .char.current {
+      background: var(--primary);
+      color: white;
+      border-radius: 2px;
+    }
+    .input-area {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-size: 1.3rem;
+      width: 100%;
+      font-family: inherit;
+      resize: none;
+      margin-bottom: 1.5rem;
+    }
+    .input-area:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .input-area:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .results {
+      display: none;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+    .results.active { display: block; }
+    .results h2 { margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>⌨️ Typing Speed Test</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">WPM</div>
+        <div class="stat-value" id="wpm">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Accuracy</div>
+        <div class="stat-value" id="accuracy">100%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Time</div>
+        <div class="stat-value" id="timer">0s</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Errors</div>
+        <div class="stat-value" id="errors" style="color:var(--danger)">0</div>
+      </div>
+    </div>
+
+    <div id="textDisplay" class="text-display"></div>
+    <textarea id="inputArea" class="input-area" placeholder="Click Start and begin typing..." disabled></textarea>
+
+    <div class="controls">
+      <button id="startBtn" class="btn btn-primary">Start Test</button>
+      <button id="resetBtn" class="btn btn-secondary">Reset</button>
+      <button id="newTextBtn" class="btn btn-secondary">New Text</button>
+    </div>
+
+    <div id="results" class="results">
+      <h2>🎉 Test Complete!</h2>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">Final WPM</div>
+          <div class="stat-value" id="finalWpm">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Accuracy</div>
+          <div class="stat-value" id="finalAccuracy">100%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Characters</div>
+          <div class="stat-value" id="finalChars">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban Board</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --bg: #ffffff;
+      --bg-secondary: #f9fafb;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+    }
+    [data-theme="dark"] {
+      --bg: #111827;
+      --bg-secondary: #1f2937;
+      --text: #f9fafb;
+      --text-secondary: #9ca3af;
+      --border: #374151;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem 1rem;
+      overflow-x: auto;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .column {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      min-height: 500px;
+    }
+    .column-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .column-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .column-count {
+      background: var(--primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .tasks {
+      min-height: 100px;
+    }
+    .task-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      cursor: move;
+      transition: all 0.2s;
+    }
+    .task-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .task-card.dragging {
+      opacity: 0.5;
+    }
+    .task-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .task-priority {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .priority-low { background: #dbeafe; color: #1e40af; }
+    .priority-medium { background: #fef3c7; color: #92400e; }
+    .priority-high { background: #fee2e2; color: #991b1b; }
+    .task-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0.25rem;
+    }
+    .add-task-btn {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      background: none;
+      color: var(--text-secondary);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .add-task-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: var(--bg);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 500px;
+    }
+    .modal-content h2 { margin-bottom: 1rem; }
+    .input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      margin-bottom: 1rem;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📋 Kanban Board</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+    <div class="board">
+      <div class="column">
+        <div class="column-header">
+          <span class="column-title">📝 To Do</span>
+          <span class="column-count" id="todoCount">0</span>
+        </div>
+        <div class="tasks" id="todoTasks" data-column="todo"></div>
+        <button class="add-task-btn" onclick="openModal('todo')">+ Add Task</button>
+      </div>
+      <div class="column">
+        <div class="column-header">
+          <span class="column-title">🚧 In Progress</span>
+          <span class="column-count" id="progressCount">0</span>
+        </div>
+        <div class="tasks" id="progressTasks" data-column="progress"></div>
+        <button class="add-task-btn" onclick="openModal('progress')">+ Add Task</button>
+      </div>
+      <div class="column">
+        <div class="column-header">
+          <span class="column-title">✅ Done</span>
+          <span class="column-count" id="doneCount">0</span>
+        </div>
+        <div class="tasks" id="doneTasks" data-column="done"></div>
+        <button class="add-task-btn" onclick="openModal('done')">+ Add Task</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">New Task</h2>
+      <input type="text" id="taskTitle" class="input" placeholder="Task title">
+      <select id="taskPriority" class="input">
+        <option value="low">Low Priority</option>
+        <option value="medium" selected>Medium Priority</option>
+        <option value="high">High Priority</option>
+      </select>
+      <div class="modal-actions">
+        <button id="saveBtn" class="btn btn-primary">Save</button>
+        <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

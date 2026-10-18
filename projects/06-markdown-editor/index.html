@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Editor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📝 Markdown Editor</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+    
+    <div class="toolbar">
+      <button class="btn-tool" data-md="**" title="Bold">𝐁</button>
+      <button class="btn-tool" data-md="*" title="Italic"><i>𝐼</i></button>
+      <button class="btn-tool" data-md="# " title="Heading 1">H1</button>
+      <button class="btn-tool" data-md="## " title="Heading 2">H2</button>
+      <button class="btn-tool" data-md="- " title="List">• List</button>
+      <button class="btn-tool" data-md="```\n" title="Code">Code</button>
+      <button class="btn-tool" data-md="[]()" title="Link">🔗</button>
+      <button class="btn" id="downloadBtn">Download</button>
+      <button class="btn" id="clearBtn">Clear</button>
+    </div>
+
+    <div class="editor-container">
+      <div class="pane">
+        <div class="pane-header">Markdown</div>
+        <textarea id="editor" placeholder="Type your markdown here..."></textarea>
+      </div>
+      <div class="pane">
+        <div class="pane-header">Preview</div>
+        <div id="preview" class="preview-content"></div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

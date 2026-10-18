@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Generator</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --bg: #ffffff;
+      --bg-secondary: #f9fafb;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+    }
+    [data-theme="dark"] {
+      --bg: #111827;
+      --bg-secondary: #1f2937;
+      --text: #f9fafb;
+      --text-secondary: #9ca3af;
+      --border: #374151;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container { max-width: 600px; width: 100%; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+    .password-display {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem;
+      word-break: break-all;
+      margin-bottom: 1rem;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .strength-meter {
+      margin: 1rem 0;
+    }
+    .strength-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .strength-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      transition: all 0.3s;
+    }
+    .strength-text {
+      text-align: center;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    .options {
+      margin: 1.5rem 0;
+    }
+    .option-group {
+      margin-bottom: 1rem;
+    }
+    .option-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 0.75rem;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .option-group label:hover {
+      border-color: var(--primary);
+    }
+    .option-group input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    .slider-group {
+      margin-bottom: 1.5rem;
+    }
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    .slider {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 0.75rem;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔐 Password Generator</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+    <div class="card">
+      <div id="passwordDisplay" class="password-display">Click Generate</div>
+      <div class="strength-meter">
+        <div class="strength-label">Password Strength</div>
+        <div class="strength-bar">
+          <div id="strengthFill" class="strength-fill"></div>
+        </div>
+        <div id="strengthText" class="strength-text"></div>
+      </div>
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Length</span>
+          <span id="lengthValue">16</span>
+        </div>
+        <input type="range" id="lengthSlider" class="slider" min="8" max="64" value="16">
+      </div>
+      <div class="options">
+        <div class="option-group">
+          <label>
+            <input type="checkbox" id="uppercase" checked>
+            <span>Uppercase Letters (A-Z)</span>
+          </label>
+        </div>
+        <div class="option-group">
+          <label>
+            <input type="checkbox" id="lowercase" checked>
+            <span>Lowercase Letters (a-z)</span>
+          </label>
+        </div>
+        <div class="option-group">
+          <label>
+            <input type="checkbox" id="numbers" checked>
+            <span>Numbers (0-9)</span>
+          </label>
+        </div>
+        <div class="option-group">
+          <label>
+            <input type="checkbox" id="symbols" checked>
+            <span>Symbols (!@#$%^&*)</span>
+          </label>
+        </div>
+      </div>
+      <button id="generateBtn" class="btn btn-primary">🔄 Generate Password</button>
+      <button id="copyBtn" class="btn btn-secondary" disabled>📋 Copy to Clipboard</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

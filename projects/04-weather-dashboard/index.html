@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🌤️ Weather Dashboard</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+
+    <div class="search-section">
+      <input type="text" id="locationInput" placeholder="Enter city name or coordinates (lat,lon)" class="input">
+      <button id="searchBtn" class="btn btn-primary">Search</button>
+      <button id="getCurrentLocation" class="btn btn-secondary">📍 Use My Location</button>
+    </div>
+
+    <div id="error" class="error"></div>
+    <div id="loading" class="loading">Loading...</div>
+
+    <div id="weatherContent" class="weather-content">
+      <div class="current-weather">
+        <div class="location-info">
+          <h2 id="locationName"></h2>
+          <p id="currentDate"></p>
+        </div>
+        <div class="weather-main">
+          <div class="temp-display">
+            <span id="currentTemp" class="temp"></span>
+            <span class="unit">°C</span>
+          </div>
+          <div class="weather-icon" id="weatherIcon"></div>
+        </div>
+        <div class="weather-details">
+          <div class="detail-item">
+            <span class="detail-label">Feels Like</span>
+            <span id="feelsLike" class="detail-value"></span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Humidity</span>
+            <span id="humidity" class="detail-value"></span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Wind Speed</span>
+            <span id="windSpeed" class="detail-value"></span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Conditions</span>
+            <span id="conditions" class="detail-value"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="forecast-section">
+        <h3>5-Day Forecast</h3>
+        <div id="forecast" class="forecast-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

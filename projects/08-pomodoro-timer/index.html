@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomodoro Timer</title>
+  <style>
+    :root {
+      --primary: #ef4444;
+      --success: #10b981;
+      --bg: #ffffff;
+      --bg-secondary: #f9fafb;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+    }
+    [data-theme="dark"] {
+      --bg: #111827;
+      --bg-secondary: #1f2937;
+      --text: #f9fafb;
+      --text-secondary: #9ca3af;
+      --border: #374151;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container { max-width: 500px; width: 100%; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    .mode-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .mode-tab {
+      flex: 1;
+      padding: 0.75rem;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .mode-tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .timer-display {
+      font-size: 6rem;
+      font-weight: bold;
+      margin: 2rem 0;
+      font-variant-numeric: tabular-nums;
+    }
+    .session-info {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    .controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+    .settings {
+      background: var(--bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    .settings h3 {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    .setting-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      text-align: left;
+    }
+    .setting-group input {
+      width: 80px;
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text);
+      text-align: center;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .stat-item {
+      background: var(--bg);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      .timer-display { font-size: 4rem; }
+      .controls { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🍅 Pomodoro Timer</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+    <div class="card">
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="work">Work</button>
+        <button class="mode-tab" data-mode="short">Short Break</button>
+        <button class="mode-tab" data-mode="long">Long Break</button>
+      </div>
+      <div id="timerDisplay" class="timer-display">25:00</div>
+      <div class="session-info" id="sessionInfo">Session 1 of 4</div>
+      <div class="controls">
+        <button id="startBtn" class="btn btn-primary">Start</button>
+        <button id="resetBtn" class="btn btn-secondary">Reset</button>
+      </div>
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-label">Completed</div>
+          <div class="stat-value" id="completedCount">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Total Time</div>
+          <div class="stat-value" id="totalTime">0m</div>
+        </div>
+      </div>
+      <div class="settings">
+        <h3>⚙️ Settings (minutes)</h3>
+        <div class="setting-group">
+          <label>Work:</label>
+          <input type="number" id="workDuration" min="1" max="60" value="25">
+        </div>
+        <div class="setting-group">
+          <label>Short Break:</label>
+          <input type="number" id="shortBreakDuration" min="1" max="30" value="5">
+        </div>
+        <div class="setting-group">
+          <label>Long Break:</label>
+          <input type="number" id="longBreakDuration" min="1" max="60" value="15">
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

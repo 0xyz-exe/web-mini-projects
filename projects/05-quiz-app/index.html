@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Application</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg: #ffffff;
+      --bg-secondary: #f9fafb;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+    }
+    [data-theme="dark"] {
+      --bg: #111827;
+      --bg-secondary: #1f2937;
+      --text: #f9fafb;
+      --text-secondary: #9ca3af;
+      --border: #374151;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .quiz-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+    .progress-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.3s;
+    }
+    .progress-text {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .timer {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    .question-container {
+      margin-bottom: 2rem;
+    }
+    .question {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .option {
+      padding: 1rem;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+    .option:hover {
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+    .option.selected {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    .option.correct {
+      border-color: var(--success);
+      background: rgba(16, 185, 129, 0.1);
+    }
+    .option.incorrect {
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+    .option:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .btn {
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      width: 100%;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .results {
+      text-align: center;
+    }
+    .score {
+      font-size: 4rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin: 2rem 0;
+    }
+    .results h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .score-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .score-item {
+      background: var(--bg);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .score-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .score-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .review-list {
+      text-align: left;
+      margin: 2rem 0;
+    }
+    .review-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .review-question {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .review-answer {
+      font-size: 0.9rem;
+      margin: 0.25rem 0;
+    }
+    .correct-text { color: var(--success); }
+    .incorrect-text { color: var(--danger); }
+    @media (max-width: 768px) {
+      .score-details { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧠 Quiz Application</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+    <div class="quiz-container">
+      <div id="quizView">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText"></div>
+        <div class="timer" id="timer">10:00</div>
+        <div class="question-container">
+          <div class="question" id="question"></div>
+          <div class="options" id="options"></div>
+        </div>
+        <button class="btn btn-primary" id="nextBtn" disabled>Next Question</button>
+      </div>
+      <div id="resultsView" style="display:none;">
+        <div class="results">
+          <h2>Quiz Complete! 🎉</h2>
+          <div class="score" id="scorePercent"></div>
+          <div class="score-details">
+            <div class="score-item">
+              <div class="score-label">Correct</div>
+              <div class="score-value correct-text" id="correctCount"></div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">Incorrect</div>
+              <div class="score-value incorrect-text" id="incorrectCount"></div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">Time Taken</div>
+              <div class="score-value" id="timeTaken"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="reviewBtn" style="margin-bottom:1rem;">Review Answers</button>
+          <button class="btn btn-primary" id="restartBtn">Restart Quiz</button>
+          <div id="reviewSection" style="display:none;">
+            <h3 style="margin:2rem 0 1rem;">Answer Review</h3>
+            <div class="review-list" id="reviewList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

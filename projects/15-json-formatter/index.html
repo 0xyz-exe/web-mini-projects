@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Formatter & Validator</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg: #ffffff;
+      --bg-secondary: #f9fafb;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+    }
+    [data-theme="dark"] {
+      --bg: #111827;
+      --bg-secondary: #1f2937;
+      --text: #f9fafb;
+      --text-secondary: #9ca3af;
+      --border: #374151;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 1rem;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .toolbar {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 0.625rem 1.25rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .editor-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      overflow: hidden;
+    }
+    .pane {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg-secondary);
+    }
+    .pane-header {
+      padding: 0.75rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .status {
+      font-size: 0.85rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+    }
+    .status.valid {
+      background: var(--success);
+      color: white;
+    }
+    .status.invalid {
+      background: var(--danger);
+      color: white;
+    }
+    textarea, pre {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      resize: none;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+    textarea:focus {
+      outline: none;
+    }
+    .error-msg {
+      padding: 1rem;
+      background: #fee2e2;
+      color: #991b1b;
+      border-radius: 8px;
+      margin: 1rem;
+    }
+    @media (max-width: 768px) {
+      .editor-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📋 JSON Formatter</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+    <div class="toolbar">
+      <button id="validateBtn" class="btn btn-primary">Validate</button>
+      <button id="formatBtn" class="btn btn-success">Format</button>
+      <button id="minifyBtn" class="btn btn-secondary">Minify</button>
+      <button id="copyBtn" class="btn btn-secondary">Copy Output</button>
+      <button id="clearBtn" class="btn btn-secondary">Clear</button>
+      <button id="sampleBtn" class="btn btn-secondary">Load Sample</button>
+    </div>
+    <div class="editor-container">
+      <div class="pane">
+        <div class="pane-header">
+          <span>Input JSON</span>
+        </div>
+        <textarea id="input" placeholder="Paste or type JSON here..."></textarea>
+      </div>
+      <div class="pane">
+        <div class="pane-header">
+          <span>Output</span>
+          <span id="status" class="status" style="display:none"></span>
+        </div>
+        <pre id="output"></pre>
+        <div id="errorMsg" class="error-msg" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

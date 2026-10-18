@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes App</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --bg: #ffffff;
+      --bg-secondary: #f9fafb;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --warning: #f59e0b;
+    }
+    [data-theme="dark"] {
+      --bg: #111827;
+      --bg-secondary: #1f2937;
+      --text: #f9fafb;
+      --text-secondary: #9ca3af;
+      --border: #374151;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .toolbar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+    }
+    .input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+    }
+    .input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .filter-btn, .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+    .filter-btn {
+      background: var(--bg-secondary);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .note-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .note-card.pinned {
+      border-color: var(--warning);
+      border-width: 2px;
+    }
+    .note-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    .note-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .note-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      flex: 1;
+      overflow-wrap: break-word;
+    }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 0.25rem;
+      transition: transform 0.2s;
+    }
+    .icon-btn:hover { transform: scale(1.2); }
+    .note-content {
+      flex: 1;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      max-height: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .note-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .note-date {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .note-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: var(--bg);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-content h2 { margin-bottom: 1.5rem; }
+    .modal-content .input {
+      margin-bottom: 1rem;
+    }
+    .modal-content textarea {
+      min-height: 200px;
+      resize: vertical;
+      font-family: inherit;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .toolbar { flex-direction: column; }
+      .filters { justify-content: stretch; flex-wrap: wrap; }
+      .filter-btn { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📝 Notes App</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+    <div class="toolbar">
+      <div class="search-box">
+        <input type="text" id="searchInput" class="input" placeholder="Search notes...">
+      </div>
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="pinned">Pinned</button>
+      </div>
+      <button id="addNoteBtn" class="btn btn-primary">+ New Note</button>
+      <button id="exportBtn" class="btn btn-primary">Export</button>
+      <button id="importBtn" class="btn btn-primary">Import</button>
+    </div>
+    <input type="file" id="fileInput" accept=".json" style="display:none">
+    <div id="notesGrid" class="notes-grid"></div>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">New Note</h2>
+      <input type="text" id="noteTitle" class="input" placeholder="Note title" autofocus>
+      <textarea id="noteContent" class="input" placeholder="Note content..."></textarea>
+      <div class="modal-actions">
+        <button id="saveBtn" class="btn btn-primary">Save</button>
+        <button id="cancelBtn" class="btn filter-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
