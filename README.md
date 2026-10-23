@@ -2,6 +2,25 @@
 
 A collection of 15+ production-quality mini web applications built with HTML, CSS, and Vanilla JavaScript.
 
+Repository: https://github.com/0xyz-exe/web-mini-projects
+
+## Screenshots
+
+### Modern Developer Portfolio
+![Developer portfolio](docs/screenshots/01_portfolio.png)
+
+### Kanban Drag-and-Drop Task Board
+![Kanban board](docs/screenshots/02_kanban_board.png)
+
+### Live Markdown Editor & Preview
+![Markdown editor](docs/screenshots/03_markdown_editor.png)
+
+### Pomodoro Productivity Timer
+![Pomodoro timer](docs/screenshots/04_pomodoro_timer.png)
+
+### Typing Speed Test & WPM Measurement
+![Typing test](docs/screenshots/05_typing_test.png)
+
 ## 🚀 Projects Overview
 
 | # | Project | Description | Key Features |
