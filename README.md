@@ -6,19 +6,24 @@ Repository: https://github.com/0xyz-exe/web-mini-projects
 
 ## Screenshots
 
-### Modern Developer Portfolio
+### 1. Modern Developer Portfolio
+Landing page portofolio personal dengan navigasi terstruktur, hero banner, badge keahlian, dan tombol interaksi cepat:
 ![Developer portfolio](docs/screenshots/01_portfolio.png)
 
-### Kanban Drag-and-Drop Task Board
+### 2. Kanban Drag-and-Drop Task Board
+Papan manajemen tugas interaktif 3 kolom (To Do, In Progress, Done) dengan badge prioritas, aksi perpindahan kartu, dan penghitung tugas real-time:
 ![Kanban board](docs/screenshots/02_kanban_board.png)
 
-### Live Markdown Editor & Preview
+### 3. Live Markdown Editor & Preview
+Editor Markdown split-pane 50/50 dengan live HTML preview parser, toolbar pemformatan teks, dan ekspor unduhan `.md`:
 ![Markdown editor](docs/screenshots/03_markdown_editor.png)
 
-### Pomodoro Productivity Timer
+### 4. Pomodoro Productivity Timer
+Aplikasi pengatur waktu produktivitas dengan siklus kerja dan jeda istirahat (Work, Short Break, Long Break), penghitung sesi, dan statistik waktu:
 ![Pomodoro timer](docs/screenshots/04_pomodoro_timer.png)
 
-### Typing Speed Test & WPM Measurement
+### 5. Typing Speed Test & WPM Measurement
+Uji kecepatan mengetik interaktif dengan pengukuran Words Per Minute (WPM), akurasi persentase, penghitung kesalahan, dan deteksi waktu respons:
 ![Typing test](docs/screenshots/05_typing_test.png)
 
 ## 🚀 Projects Overview
